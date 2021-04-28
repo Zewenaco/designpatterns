@@ -1,0 +1,61 @@
+plugins {
+	id 'org.springframework.boot' version '2.4.5'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id 'idea'
+	id 'java-library'
+	id 'maven-publish'
+	id "io.freefair.lombok" version "5.3.0"
+	id 'com.github.sherter.google-java-format' version '0.9'
+	id 'org.sonarqube' version '3.1.1'
+	id 'info.solidsoft.pitest' version '1.6.0'
+	id 'jacoco'
+}
+
+apply from: 'gradle/version.gradle'
+version = "${majorVer}.${minorVer}.${patchVer}-${typeVer}"
+group = 'com.zewenaco'
+apply from: 'gradle/sonar.gradle'
+sourceCompatibility = '11'
+
+java {
+	withSourcesJar()
+}
+
+allprojects {
+	gradle.projectsEvaluated {
+		tasks.withType(JavaCompile) {
+			options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+		}
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+googleJavaFormat {
+	toolVersion = '1.1'
+}
+
+processResources {
+	filesMatching('*.yaml') {
+		expand project.properties
+	}
+}
+
+tasks.bootJar {enabled = false}
+tasks.jar {enabled = true}
+
+apply from: 'gradle/dependencies.gradle'
+apply from: 'gradle/tests.gradle'
+
+test {
+	useJUnitPlatform()
+}

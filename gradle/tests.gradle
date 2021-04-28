@@ -1,0 +1,29 @@
+test {
+    testLogging {
+        exceptionFormat "full"
+        events "passed", "failed", "skipped"
+    }
+    useJUnitPlatform {
+        // includeEngines 'junit-jupiter', 'junit-vintage'
+        // excludeEngines 'custom-engine'
+
+        // includeTags 'fast'
+        excludeTags("slow")
+    }
+    configure {
+        systemProperties = ['spring.profiles.active': hasProperty('SPRING_PROFILE') ? SPRING_PROFILE : System.getenv('SPRING_PROFILE')]
+    }
+    finalizedBy(jacocoTestReport)
+}
+
+pitest {
+    junit5PluginVersion = '0.12'
+    targetClasses = ['com.zewenaco.*']
+    excludedClasses = []
+    threads = 4
+    outputFormats = ['XML', 'HTML']
+    coverageThreshold = 0
+    reportDir = file("$buildDir/reports/mutation-tests-results")
+    useClasspathFile.set(true)
+    timestampedReports = false
+}

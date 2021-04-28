@@ -1,0 +1,20 @@
+ext {
+    // Testing frameworks
+    mockitoVer = '3.8.0'
+}
+
+dependencies {
+    compileOnly 'org.springframework.boot:spring-boot-starter'
+    testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
+    testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
+    testImplementation "org.mockito:mockito-inline:${mockitoVer}"
+    testImplementation "org.mockito:mockito-core:${mockitoVer}"
+}
+
+configurations {
+    testCompile.extendsFrom compileOnly
+    all {
+        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+        resolutionStrategy.cacheDynamicVersionsFor 0, 'seconds'
+    }
+}

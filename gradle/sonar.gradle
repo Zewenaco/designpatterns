@@ -1,0 +1,19 @@
+apply plugin: 'org.sonarqube'
+
+def sonar_login = hasProperty('SONAR_TOKEN') ? SONAR_TOKEN : System.getenv('SONAR_TOKEN')
+
+sonarqube {
+    properties {
+        property "sonar.login", sonar_login
+        property "sonar.analysis.mode", "publish"
+        property "sonar.issuesReport.html.enable", "true"
+        property "sonar.scm.disabled", "true"
+        property "sonar.tests", "src/test/unitTest"
+        property "sonar.java.coveragePlugin", "jacoco"
+        property "sonar.jacoco.reportPaths", "build/jacoco/"
+        property "sonar.junit.reportPaths", "build/test-results/test"
+        property "sonar.exclusions", [
+                "**/configuration/**",
+        ]
+    }
+}
